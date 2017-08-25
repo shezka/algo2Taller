@@ -6,7 +6,17 @@
 
 #IncludeRegexTransform: 
 
-/home/jscherman/tpesi/main.cpp
-bits/stdc++.h
+/Users/jessicasinger/Desktop/algo3/algo2Taller/main.cpp
+vector
+-
+set
+-
+string
+-
+iostream
+-
+sstream
+-
+fstream
 -
 

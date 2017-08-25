@@ -1,4 +1,16 @@
-#include <bits/stdc++.h>
+#include <vector>
+#include <set>
+#include <string>
+#include <iostream>
+#include <sstream>
+#include <fstream>
+
+struct Opinion {
+    int emisor;
+    int receptor;
+    bool esConfiable;
+};
+
 int m = 0;
 bool habloMalDeUnBueno(std::set<int> agentesConfiables, std::pair< std::pair< int, int>, int> opinion, int actual, bool confio)
 {
@@ -12,7 +24,7 @@ bool unBuenoHabloMalDeEl(std::set<int> agentesConfiables, std::pair< std::pair< 
 }
 bool habloBienDeUnMalo(std::set<int> agentesConfiables, std::pair< std::pair< int, int>, int> opinion, int actual, bool confio)
 {
-    return (opinion.first.first == actual) && (opinion.first.second < actual) &&
+    return (opinion.first.first == actual) && (opinion.first.second > actual) &&
         (agentesConfiables.find(opinion.first.second) == agentesConfiables.end()) &&
            (opinion.second == 1) && confio;
 }
@@ -21,9 +33,11 @@ bool unBuenoHabloBienYNoConfio(std::set<int> agentesConfiables, std::pair< std::
     return !confio && (agentesConfiables.find(opinion.first.first) != agentesConfiables.end()) &&
            (opinion.first.second == actual) && (opinion.second == 1);
 }
-bool tieneSentido(std::set<int> agentesConfiables, std::vector<std::pair< std::pair< int, int>, int>> vectorcitoDeOpiniones,
+std::pair<bool, int> tieneSentido(std::set<int> agentesConfiables, std::vector<std::pair< std::pair< int, int>, int>> vectorcitoDeOpiniones,
     int actual, bool confio)
 {
+    int cantARestar = 0;
+
     for(int i = 0; i < vectorcitoDeOpiniones.size(); i++)
     {
         if (habloMalDeUnBueno(agentesConfiables, vectorcitoDeOpiniones[i], actual, confio) ||
@@ -31,15 +45,33 @@ bool tieneSentido(std::set<int> agentesConfiables, std::vector<std::pair< std::p
                 habloBienDeUnMalo(agentesConfiables, vectorcitoDeOpiniones[i], actual, confio) ||
                 unBuenoHabloBienYNoConfio(agentesConfiables, vectorcitoDeOpiniones[i], actual, confio))
         {
-            return 0;
+            return std::make_pair(0, cantARestar);
         }
+        //si no confio, cuento solo aquellos q el no hablo bien
+        //si confio, solo aquellos q el no hablo mal
+         /*   if (vectorcitoDeOpiniones[i].first.first == actual)
+            {
+                if (vectorcitoDeOpiniones[i].first.second > actual){
+                    if (confio){
+                        if (vectorcitoDeOpiniones[i].second == 0){
+                            cantARestar++;
+                        }
+                    }
+                    else
+                    {
+                        if (vectorcitoDeOpiniones[i].second == 1){
+                            cantARestar++;
+                        }
+                    }
+                }
+            }*/
     }
-    return 1;
+    return std::make_pair(1, cantARestar);
 }
 int generarSolucion( std::vector<std::pair< std::pair< int, int>, int>> vectorcitoDeOpiniones,
                      std::set<int> agentesConfiables, int i, int n)
 {
-    if (n == i) {
+    if (0 > i) {
           if (agentesConfiables.size() > m) {
               m = agentesConfiables.size();
           }
@@ -47,32 +79,38 @@ int generarSolucion( std::vector<std::pair< std::pair< int, int>, int>> vectorci
     }
     int sinElla = -1;
     int conElla = -1;
-    if ((agentesConfiables.size() + n - i) <= m){
+
+    if ((agentesConfiables.size() - i) < m){ //los q ya agregue + los q me faltan procesar
         return -1;
     } else {
-        if (tieneSentido(agentesConfiables, vectorcitoDeOpiniones, i, 1)){
-            agentesConfiables.insert(i);
-            conElla = generarSolucion(vectorcitoDeOpiniones, agentesConfiables, i+1, n);
-            //agentesConfiables.erase(i);
-        }
+
+    std::pair<bool, int> tieneSentidoAgregarlo = tieneSentido(agentesConfiables, vectorcitoDeOpiniones, i, 1);
+    std::pair<bool, int> tieneSentidoNoAgregarlo = tieneSentido(agentesConfiables, vectorcitoDeOpiniones, i, 0);
+
+    if (tieneSentidoAgregarlo.first){
+        agentesConfiables.insert(i);
+        conElla = generarSolucion(vectorcitoDeOpiniones, agentesConfiables, i-1, n);
         agentesConfiables.erase(i);
-        if (tieneSentido(agentesConfiables, vectorcitoDeOpiniones, i, 0)) {
-            sinElla = generarSolucion(vectorcitoDeOpiniones, agentesConfiables, i+1, n);
-        }
+    }
+     if (tieneSentidoNoAgregarlo.first) {
+            sinElla = generarSolucion(vectorcitoDeOpiniones, agentesConfiables, i-1, n);
+    }
+
         return std::max(sinElla, conElla);
     }
 }
 
-void generarMejorInstancia( std::vector<std::pair< std::pair< int, int>, int>> &vectorcitoDeOpiniones, int n)
+std::vector<std::pair< std::pair< int, int>, int>>  generarMejorInstancia( std::vector<std::pair< std::pair < int, int>, int> > vectorcitoDeOpiniones, int n)
 {
-    for (int j = 0; j < n; j++)
+    for (int j = 1; j < n; j++)
     {
-        for (int i = 0; i < n; i++){
-            vectorcitoDeOpiniones.push_back( std::make_pair(std::make_pair(j, i), 1));
-        }
+       // for (int i = 0; i < n; i++){
+            vectorcitoDeOpiniones.push_back( std::make_pair(std::make_pair(j-1, j), 0));
+        //}
     }
+    return vectorcitoDeOpiniones;
 }
-std::vector<std::pair< std::pair< int, int>, int>> generarPeorInstancia( std::vector<std::pair< std::pair< int, int>, int>> &vectorcitoDeOpiniones, int n)
+std::vector<std::pair< std::pair< int, int>, int>> generarPeorInstancia( std::vector<std::pair< std::pair< int, int>, int>> vectorcitoDeOpiniones, int n)
 {
     for (int j = 0; j < n/2; j++)
     {
@@ -87,21 +125,21 @@ std::vector<std::pair< std::pair< int, int>, int>> generarPeorInstancia( std::ve
 int main() {
 
     std::string nombreArchivo = "esidatos";
-
     std::stringstream ss;
-    ss <<  "/home/jscherman/tpesi/" << nombreArchivo << ".csv";
+    ss <<  "/Users/jessicasinger/Desktop/algo3/algo2Taller/" << nombreArchivo << ".csv";
     std::ofstream a_file (ss.str());
 
     a_file << "long,tiempo" << std::endl;
-    int minM = 1, maxM = 30, saltarDeA = 1, cantInstanciasPorM = 3;
+    int minM = 1, maxM = 40, saltarDeA = 2, cantInstanciasPorM = 3;
     for (int i = minM; i <= maxM; i+=saltarDeA) {
         long long tiempoTotal = 0;
         for (int j = 0; j < cantInstanciasPorM; ++j) {
             std::vector<std::pair< std::pair< int, int>, int>> vectorcitoDeOpiniones;
             std::set<int> agentesConfiables;
-            vectorcitoDeOpiniones = generarPeorInstancia(vectorcitoDeOpiniones, i);
+            vectorcitoDeOpiniones = generarMejorInstancia(vectorcitoDeOpiniones, i);
             auto tpi = std::chrono::high_resolution_clock::now();
-            int rta = generarSolucion(vectorcitoDeOpiniones, agentesConfiables, 0, i);
+            int rta = generarSolucion(vectorcitoDeOpiniones, agentesConfiables, i-1, i);
+            m = 0;
             auto tpf = std::chrono::high_resolution_clock::now();
             auto tiempo = std::chrono::duration_cast<std::chrono::nanoseconds>(tpf-tpi).count();
             tiempoTotal+= tiempo;
