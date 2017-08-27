@@ -51,32 +51,55 @@ bool unBuenoHabloBienYNoConfio(std::set<int> &agentesConfiables, Opinion& opinio
 bool tieneSentido(std::set<int> &agentesConfiables, std::vector<Opinion> &vectorcitoDeOpiniones,
     int actual, bool confio)
 {
+    std::set<int> MalosPosta;
+    std::set<int> MalosParaElActual;
+    std::set<int> BuenosPosta;
+    std::set<int> BuenosParaElActual;
     for(int i = 0; i < vectorcitoDeOpiniones.size(); i++)
     {
         if (habloMalDeUnBueno(agentesConfiables, vectorcitoDeOpiniones[i], actual, confio) ||
                 unBuenoHabloMalDeEl(agentesConfiables, vectorcitoDeOpiniones[i], actual, confio) ||
                 habloBienDeUnMalo(agentesConfiables, vectorcitoDeOpiniones[i], actual, confio) ||
                 unBuenoHabloBienYNoConfio(agentesConfiables, vectorcitoDeOpiniones[i], actual, confio)) {
+            //y no hablo mal de alguien q un bueno hablo bien, no hablo bien si un bueno hablo mal Y CONFIO
+            //y no confio y un bueno hablo bien de alguien q hbalo bien de el!!
             return false;
         }
-        //si no confio, cuento solo aquellos q el no hablo bien
-        //si confio, solo aquellos q el no hablo mal
-         /*   if (vectorcitoDeOpiniones[i].first.first == actual)
-            {
-                if (vectorcitoDeOpiniones[i].first.second > actual){
-                    if (confio){
-                        if (vectorcitoDeOpiniones[i].second == 0){
-                            cantARestar++;
-                        }
-                    }
-                    else
-                    {
-                        if (vectorcitoDeOpiniones[i].second == 1){
-                            cantARestar++;
-                        }
-                    }
+        if (vectorcitoDeOpiniones[i].emisor == actual) {
+            if (vectorcitoDeOpiniones[i].confioEnReceptor){
+                BuenosParaElActual.insert(vectorcitoDeOpiniones[i].receptor);
+            } else {
+                MalosParaElActual.insert(vectorcitoDeOpiniones[i].receptor);
+            }
+        } else {
+            if (agentesConfiables.find(vectorcitoDeOpiniones[i].emisor) != agentesConfiables.end()){
+                if(vectorcitoDeOpiniones[i].confioEnReceptor) {
+                    BuenosPosta.insert(vectorcitoDeOpiniones[i].receptor);
                 }
-            }*/
+                else {
+                    MalosPosta.insert(vectorcitoDeOpiniones[i].receptor);
+                }
+            }
+        }
+
+    }
+    if (confio) {
+        auto iterator = MalosParaElActual.begin();
+        while (iterator != MalosParaElActual.end())
+        {
+            if (BuenosPosta.find(*iterator) != BuenosPosta.end()){
+                return false;
+            }
+            iterator++;
+        }
+        iterator = BuenosParaElActual.begin();
+        while (iterator != BuenosParaElActual.end())
+        {
+            if (MalosPosta.find(*iterator) != BuenosPosta.end()){
+                return false;
+            }
+            iterator++;
+        }
     }
     return true;
 }
@@ -111,6 +134,7 @@ int generarSolucion( std::vector<Opinion> &vectorcitoDeOpiniones,
         return std::max(sinElla, conElla);
     }
 }
+
 
 std::vector<Opinion>  generarMejorInstancia(int n) {
     std::vector<Opinion> opiniones;
