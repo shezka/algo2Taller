@@ -189,6 +189,27 @@ std::vector<Opinion> generarAlgunaInstancia()
 }
 int main() {
 
+    /*std::vector<Opinion> opiniones;
+    int cantAgentes, cantOpiniones;
+
+    std::cin >> cantAgentes >> cantOpiniones;
+    while ((cantAgentes != 0) || (cantOpiniones != 0)) {
+        for (int i = 0; i < cantOpiniones; i++) {
+            int emisor, receptor;
+            std::cin >> emisor >> receptor;
+            if (receptor < 0) {
+                opiniones.push_back({emisor - 1, -receptor - 1, 0});
+            } else {
+                opiniones.push_back({emisor - 1, receptor - 1, 1});
+            }
+        }
+        std::set<int> confiables;
+        int maximoParcial = 0;
+        int rta = generarSolucion(opiniones, confiables, cantAgentes - 1, cantAgentes, maximoParcial);
+        opiniones.clear();
+        std::cout << rta << std::endl;
+        std::cin >> cantAgentes >> cantOpiniones;
+    }*/
     std::string nombreArchivo = "esidatos";
     std::stringstream ss;
     ss <<  "/Users/jessicasinger/Desktop/algo3/algo2Taller/" << nombreArchivo << ".csv";
@@ -196,7 +217,7 @@ int main() {
     std::ofstream a_file (ss.str());
 
     a_file << "long,tiempo" << std::endl;
-    int minN = 1, maxN = 1000, saltarDeA = 3, cantInstanciasPorN = 5;
+    int minN = 1, maxN = 1, saltarDeA = 3, cantInstanciasPorN = 5;
     for (int i = minN; i <= maxN; i+=saltarDeA) {
         long long tiempoTotal = 0;
         for (int j = 0; j < cantInstanciasPorN; ++j) {
