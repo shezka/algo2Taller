@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/Users/jessicasinger/Desktop/algo3/algo2Taller/main.cpp
+/home/jscherman/tpesi/main.cpp
 vector
 -
 set
@@ -20,5 +20,7 @@ sstream
 chrono
 -
 fstream
+-
+random
 -
 

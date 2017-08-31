@@ -5,6 +5,8 @@
 #include <sstream>
 #include <chrono>
 #include <fstream>
+#include <random>
+
 
 struct Opinion {
     int emisor;
@@ -187,6 +189,31 @@ std::vector<Opinion> generarAlgunaInstancia()
 
   return opiniones;
 }
+
+std::vector<Opinion> generarInstanciaRandom(int n, int cantOpiniones) {
+    if (cantOpiniones > std::pow(n, 2)) throw std::invalid_argument("No puede haber tantas opiniones ");
+    std::random_device r;
+    std::default_random_engine e1(r());
+    std::uniform_int_distribution<int> uniform_dist_opiniones(0, n-1);
+
+    std::vector<std::vector<bool>> yaOpino (n, std::vector<bool>(n));
+    std::vector<Opinion> opiniones(cantOpiniones);
+
+
+    for (int i = 0; i < cantOpiniones; ++i) {
+        int emisor, receptor;
+        do {
+            emisor = uniform_dist_opiniones(e1);
+            receptor = uniform_dist_opiniones(e1);
+        } while (yaOpino[emisor][receptor]);
+        int confioEnReceptor = uniform_dist_opiniones(e1) & 2;
+        opiniones[i] = {emisor, receptor, confioEnReceptor};
+        yaOpino[emisor][receptor] = true;
+    }
+
+    return opiniones;
+}
+
 int main() {
 
     /*std::vector<Opinion> opiniones;
@@ -210,6 +237,8 @@ int main() {
         std::cout << rta << std::endl;
         std::cin >> cantAgentes >> cantOpiniones;
     }*/
+
+
     std::string nombreArchivo = "esidatos";
     std::stringstream ss;
     ss <<  "/Users/jessicasinger/Desktop/algo3/algo2Taller/" << nombreArchivo << ".csv";
