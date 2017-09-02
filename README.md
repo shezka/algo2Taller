@@ -1,3 +1,6 @@
-# tp1-backtracking
+# Algo III - TP1-Backtracking
 
-![alt text](http://www.ishow.gr/Thumbnail.ashx?url=files/archive/2013/9/7/75DF878C-2E7A-4BAA-BE44-43D164CCA11C.jpg&x1=24&y1=1&x2=334&y2=466&width=165)
+##Instrucciones
+1. cmake CMakeLists.txt
+2. make all
+3. ./tp1 < input (donde input tiene el formato especificado en el enunciado) 

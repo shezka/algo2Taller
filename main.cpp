@@ -269,8 +269,7 @@ std::vector<Opinion> generarInstanciaRandom(int n, int cantOpiniones) {
 }
 
 int main() {
-
-   /* std::vector<Opinion> opiniones;
+    std::vector<Opinion> opiniones;
     int cantAgentes, cantOpiniones;
 
     std::cin >> cantAgentes >> cantOpiniones;
@@ -287,67 +286,74 @@ int main() {
         std::set<int> confiables;
         int maximoParcial = 0;
         int rta = generarSolucion(opiniones, confiables, cantAgentes - 1, cantAgentes, maximoParcial);
-        int rtaa = generarSolucionSinPodas(opiniones, confiables, cantAgentes - 1, cantAgentes);
         opiniones.clear();
-        std::cout << rta << " " << rtaa << std::endl;
+        std::cout << rta << std::endl;
         std::cin >> cantAgentes >> cantOpiniones;
-    }*/
-
-
-
-    std::string nombreArchivo = "esidatos";
-    std::stringstream ss;
-    ss <<  "/Users/jessicasinger/Desktop/algo3/algo2Taller/" << nombreArchivo << ".csv";
-//    ss <<  "/home/jscherman/tpesi/" << nombreArchivo << ".csv";
-    std::ofstream a_file (ss.str());
-
-    std::random_device r;
-    std::default_random_engine e1(r());
-
-    a_file << "long,tiempoConPodas,tiempoSinPodas" << std::endl;
-    int minN = 1, maxN = 150, saltarDeA = 1, cantInstanciasPorN = 5;
-    for (int i = minN; i <= maxN; i+=saltarDeA) {
-        long long tiempoTotalConPodas = 0;
-        long long tiempoTotalSinPodas = 0;
-        for (int j = 0; j < cantInstanciasPorN; ++j) {
-
-            std::set<int> agentesConfiables;
-
-            std::uniform_int_distribution<int> uniform_dist_opiniones(0, i*i);
-            std::vector<Opinion> vectorcitoDeOpiniones = generarInstanciaRandom(i, i*(i-5));//= generarOtraMejorInstancia(i);
-           // std::cout << vectorcitoDeOpiniones;
-
-            {
-                auto tpi = std::chrono::high_resolution_clock::now();
-                //int maximoParcial = -1;
-                //int rta = generarSolucion(vectorcitoDeOpiniones, agentesConfiables, i-1, i, m);
-                int rta = generarSolucion(vectorcitoDeOpiniones, agentesConfiables, i-1, i, m);
-                m = 0;
-                auto tpf = std::chrono::high_resolution_clock::now();
-
-                auto tiempo = std::chrono::duration_cast<std::chrono::nanoseconds>(tpf-tpi).count();
-                tiempoTotalConPodas+= tiempo;
-            }
-            {
-                auto tpi = std::chrono::high_resolution_clock::now();
-                //int maximoParcial = -1;
-                //int rta = generarSolucion(vectorcitoDeOpiniones, agentesConfiables, i-1, i, m);
-                int rta = generarSolucionSinPodas(vectorcitoDeOpiniones, agentesConfiables, i-1, i);
-                auto tpf = std::chrono::high_resolution_clock::now();
-
-                auto tiempo = std::chrono::duration_cast<std::chrono::nanoseconds>(tpf-tpi).count();
-                tiempoTotalSinPodas+= tiempo;
-            }
-        }
-
-        tiempoTotalConPodas = tiempoTotalConPodas/ cantInstanciasPorN;
-        tiempoTotalSinPodas = tiempoTotalSinPodas/ cantInstanciasPorN;
-        std::cout << i << "," << tiempoTotalConPodas << "," << tiempoTotalSinPodas << std::endl ;
-        a_file << i << "," << tiempoTotalConPodas << "," << tiempoTotalSinPodas << std::endl;
     }
 
-    a_file.close();
-    std::cout << "Listo!" << std::endl;
+    return m;
+}
+
+
+
+
+
+
+
+
+//std::string nombreArchivo = "esidatos";
+//std::stringstream ss;
+//ss <<  "/Users/jessicasinger/Desktop/algo3/algo2Taller/" << nombreArchivo << ".csv";
+////    ss <<  "/home/jscherman/tpesi/" << nombreArchivo << ".csv";
+//std::ofstream a_file (ss.str());
+//
+//std::random_device r;
+//std::default_random_engine e1(r());
+//
+//a_file << "long,tiempoConPodas,tiempoSinPodas" << std::endl;
+//int minN = 1, maxN = 150, saltarDeA = 1, cantInstanciasPorN = 5;
+//for (int i = minN; i <= maxN; i+=saltarDeA) {
+//long long tiempoTotalConPodas = 0;
+//long long tiempoTotalSinPodas = 0;
+//for (int j = 0; j < cantInstanciasPorN; ++j) {
+//
+//std::set<int> agentesConfiables;
+//
+//std::uniform_int_distribution<int> uniform_dist_opiniones(0, i*i);
+//std::vector<Opinion> vectorcitoDeOpiniones = generarInstanciaRandom(i, i*(i-5));//= generarOtraMejorInstancia(i);
+//// std::cout << vectorcitoDeOpiniones;
+//
+//{
+//auto tpi = std::chrono::high_resolution_clock::now();
+////int maximoParcial = -1;
+////int rta = generarSolucion(vectorcitoDeOpiniones, agentesConfiables, i-1, i, m);
+//int rta = generarSolucion(vectorcitoDeOpiniones, agentesConfiables, i-1, i, m);
+//m = 0;
+//auto tpf = std::chrono::high_resolution_clock::now();
+//
+//auto tiempo = std::chrono::duration_cast<std::chrono::nanoseconds>(tpf-tpi).count();
+//tiempoTotalConPodas+= tiempo;
+//}
+//{
+//auto tpi = std::chrono::high_resolution_clock::now();
+////int maximoParcial = -1;
+////int rta = generarSolucion(vectorcitoDeOpiniones, agentesConfiables, i-1, i, m);
+//int rta = generarSolucionSinPodas(vectorcitoDeOpiniones, agentesConfiables, i-1, i);
+//auto tpf = std::chrono::high_resolution_clock::now();
+//
+//auto tiempo = std::chrono::duration_cast<std::chrono::nanoseconds>(tpf-tpi).count();
+//tiempoTotalSinPodas+= tiempo;
+//}
+//}
+//
+//tiempoTotalConPodas = tiempoTotalConPodas/ cantInstanciasPorN;
+//tiempoTotalSinPodas = tiempoTotalSinPodas/ cantInstanciasPorN;
+//std::cout << i << "," << tiempoTotalConPodas << "," << tiempoTotalSinPodas << std::endl ;
+//a_file << i << "," << tiempoTotalConPodas << "," << tiempoTotalSinPodas << std::endl;
+//}
+//
+//a_file.close();
+//std::cout << "Listo!" << std::endl;
 
 //   // int m = -1;
 //    std::vector<int> tiempos;
@@ -373,7 +379,5 @@ int main() {
 //        std::cout << j << "," << tiempo/3 << std::endl;
 //    }
 
-    return m;
-}
 
 
