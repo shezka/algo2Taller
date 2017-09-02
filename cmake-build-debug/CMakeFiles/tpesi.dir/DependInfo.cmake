@@ -4,9 +4,9 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/jscherman/tpesi/main.cpp" "/home/jscherman/tpesi/cmake-build-debug/CMakeFiles/tpesi.dir/main.cpp.o"
+  "/Users/jessicasinger/Desktop/algo3/algo2Taller/main.cpp" "/Users/jessicasinger/Desktop/algo3/algo2Taller/cmake-build-debug/CMakeFiles/tpesi.dir/main.cpp.o"
   )
-set(CMAKE_CXX_COMPILER_ID "GNU")
+set(CMAKE_CXX_COMPILER_ID "AppleClang")
 
 # The include file search paths:
 set(CMAKE_CXX_TARGET_INCLUDE_PATH

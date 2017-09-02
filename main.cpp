@@ -51,7 +51,7 @@ bool unBuenoHabloBienYNoConfio(std::set<int> &agentesConfiables, Opinion& opinio
            (opinion.receptor == actual) && (opinion.confioEnReceptor == 1);
 }
 bool tieneSentido(std::set<int> &agentesConfiables, std::vector<Opinion> &vectorcitoDeOpiniones,
-    int actual, bool confio)
+                  int actual, bool confio)
 {
     std::set<int> MalosPosta;
     std::set<int> MalosParaElActual;
@@ -60,9 +60,9 @@ bool tieneSentido(std::set<int> &agentesConfiables, std::vector<Opinion> &vector
     for(int i = 0; i < vectorcitoDeOpiniones.size(); i++)
     {
         if (habloMalDeUnBueno(agentesConfiables, vectorcitoDeOpiniones[i], actual, confio) ||
-                unBuenoHabloMalDeEl(agentesConfiables, vectorcitoDeOpiniones[i], actual, confio) ||
-                habloBienDeUnMalo(agentesConfiables, vectorcitoDeOpiniones[i], actual, confio) ||
-                unBuenoHabloBienYNoConfio(agentesConfiables, vectorcitoDeOpiniones[i], actual, confio)) {
+            unBuenoHabloMalDeEl(agentesConfiables, vectorcitoDeOpiniones[i], actual, confio) ||
+            habloBienDeUnMalo(agentesConfiables, vectorcitoDeOpiniones[i], actual, confio) ||
+            unBuenoHabloBienYNoConfio(agentesConfiables, vectorcitoDeOpiniones[i], actual, confio)) {
             //y no hablo mal de alguien q un bueno hablo bien, no hablo bien si un bueno hablo mal Y CONFIO
             //y no confio y un bueno hablo bien de alguien q hbalo bien de el!!
             return false;
@@ -105,14 +105,33 @@ bool tieneSentido(std::set<int> &agentesConfiables, std::vector<Opinion> &vector
     }
     return true;
 }
+    bool tieneSentidoSinPodas(std::set<int> &agentesConfiables, std::vector<Opinion> &vectorcitoDeOpiniones,
+                       int actual, bool confio)
+    {
+        for(int i = 0; i < vectorcitoDeOpiniones.size(); i++)
+        {
+            if (habloMalDeUnBueno(agentesConfiables, vectorcitoDeOpiniones[i], actual, confio) ||
+                unBuenoHabloMalDeEl(agentesConfiables, vectorcitoDeOpiniones[i], actual, confio) ||
+                habloBienDeUnMalo(agentesConfiables, vectorcitoDeOpiniones[i], actual, confio) ||
+                unBuenoHabloBienYNoConfio(agentesConfiables, vectorcitoDeOpiniones[i], actual, confio)) {
+                //y no hablo mal de alguien q un bueno hablo bien, no hablo bien si un bueno hablo mal Y CONFIO
+                //y no confio y un bueno hablo bien de alguien q hbalo bien de el!!
+                return false;
+            }
+
+
+        }
+
+    return true;
+}
 int generarSolucion( std::vector<Opinion> &vectorcitoDeOpiniones,
                      std::set<int> &agentesConfiables, int i, int n, int &maximoParcial)
 {
     if (0 > i) {
-          if (agentesConfiables.size() > m) {
-              maximoParcial = agentesConfiables.size();
-          }
-          return agentesConfiables.size();
+        if (agentesConfiables.size() > m) {
+            maximoParcial = agentesConfiables.size();
+        }
+        return agentesConfiables.size();
     }
     int sinElla = -1;
     int conElla = -1;
@@ -126,12 +145,38 @@ int generarSolucion( std::vector<Opinion> &vectorcitoDeOpiniones,
         conElla = generarSolucion(vectorcitoDeOpiniones, agentesConfiables, i-1, n, maximoParcial);
         agentesConfiables.erase(i);
     }
-     if (tieneSentidoNoAgregarlo && ((agentesConfiables.size() + i - 1) >= maximoParcial)) {
-            sinElla = generarSolucion(vectorcitoDeOpiniones, agentesConfiables, i-1, n, maximoParcial);
+    if (tieneSentidoNoAgregarlo && ((agentesConfiables.size() + i - 1) >= maximoParcial)) {
+        sinElla = generarSolucion(vectorcitoDeOpiniones, agentesConfiables, i-1, n, maximoParcial);
     }
 
-        return std::max(sinElla, conElla);
+    return std::max(sinElla, conElla);
+}
+
+int generarSolucionSinPodas( std::vector<Opinion> &vectorcitoDeOpiniones,
+                      std::set<int> &agentesConfiables, int i, int n)
+{
+    if (0 > i) {
+
+        return agentesConfiables.size();
     }
+    int sinElla = -1;
+    int conElla = -1;
+
+
+    bool tieneSentidoAgregarlo = tieneSentidoSinPodas(agentesConfiables, vectorcitoDeOpiniones, i, 1);
+    bool tieneSentidoNoAgregarlo = tieneSentidoSinPodas(agentesConfiables, vectorcitoDeOpiniones, i, 0);
+
+    if (tieneSentidoAgregarlo){
+        agentesConfiables.insert(i);
+        conElla = generarSolucionSinPodas(vectorcitoDeOpiniones, agentesConfiables, i-1, n);
+        agentesConfiables.erase(i);
+    }
+    if (tieneSentidoNoAgregarlo) {
+        sinElla = generarSolucionSinPodas(vectorcitoDeOpiniones, agentesConfiables, i-1, n);
+    }
+
+    return std::max(sinElla, conElla);
+}
 
 
 
@@ -168,6 +213,15 @@ std::vector<Opinion> generarPeorInstancia(int n)
         }
     }
     return opiniones;
+}std::vector<Opinion> generarOtraPeorInstancia(int n)
+{
+    std::vector<Opinion> opiniones;
+    for (int j = 1; j < n; j++)
+    {
+            opiniones.push_back({j, j-1,  0});
+
+    }
+    return opiniones;
 }
 std::vector<Opinion> generarAlgunaInstancia()
 {
@@ -197,7 +251,7 @@ std::vector<Opinion> generarInstanciaRandom(int n, int cantOpiniones) {
     std::uniform_int_distribution<int> uniform_dist_opiniones(0, n-1);
 
     std::vector<std::vector<bool>> yaOpino (n, std::vector<bool>(n));
-    std::vector<Opinion> opiniones(cantOpiniones);
+    std::vector<Opinion> opiniones;
 
 
     for (int i = 0; i < cantOpiniones; ++i) {
@@ -205,9 +259,9 @@ std::vector<Opinion> generarInstanciaRandom(int n, int cantOpiniones) {
         do {
             emisor = uniform_dist_opiniones(e1);
             receptor = uniform_dist_opiniones(e1);
-        } while (yaOpino[emisor][receptor]);
-        int confioEnReceptor = uniform_dist_opiniones(e1) & 2;
-        opiniones[i] = {emisor, receptor, confioEnReceptor};
+        } while (yaOpino[emisor][receptor] || emisor == receptor);
+        bool confioEnReceptor = uniform_dist_opiniones(e1) & 2;
+        opiniones.push_back({emisor, receptor, confioEnReceptor});
         yaOpino[emisor][receptor] = true;
     }
 
@@ -216,7 +270,7 @@ std::vector<Opinion> generarInstanciaRandom(int n, int cantOpiniones) {
 
 int main() {
 
-    /*std::vector<Opinion> opiniones;
+   /* std::vector<Opinion> opiniones;
     int cantAgentes, cantOpiniones;
 
     std::cin >> cantAgentes >> cantOpiniones;
@@ -233,10 +287,12 @@ int main() {
         std::set<int> confiables;
         int maximoParcial = 0;
         int rta = generarSolucion(opiniones, confiables, cantAgentes - 1, cantAgentes, maximoParcial);
+        int rtaa = generarSolucionSinPodas(opiniones, confiables, cantAgentes - 1, cantAgentes);
         opiniones.clear();
-        std::cout << rta << std::endl;
+        std::cout << rta << " " << rtaa << std::endl;
         std::cin >> cantAgentes >> cantOpiniones;
     }*/
+
 
 
     std::string nombreArchivo = "esidatos";
@@ -245,30 +301,49 @@ int main() {
 //    ss <<  "/home/jscherman/tpesi/" << nombreArchivo << ".csv";
     std::ofstream a_file (ss.str());
 
-    a_file << "long,tiempo" << std::endl;
-    int minN = 1, maxN = 1, saltarDeA = 3, cantInstanciasPorN = 5;
+    std::random_device r;
+    std::default_random_engine e1(r());
+
+    a_file << "long,tiempoConPodas,tiempoSinPodas" << std::endl;
+    int minN = 1, maxN = 150, saltarDeA = 1, cantInstanciasPorN = 5;
     for (int i = minN; i <= maxN; i+=saltarDeA) {
-        long long tiempoTotal = 0;
+        long long tiempoTotalConPodas = 0;
+        long long tiempoTotalSinPodas = 0;
         for (int j = 0; j < cantInstanciasPorN; ++j) {
 
             std::set<int> agentesConfiables;
-            std::vector<Opinion> vectorcitoDeOpiniones = generarAlgunaInstancia();//= generarOtraMejorInstancia(i);
-//            std::cout << vectorcitoDeOpiniones;
 
-            auto tpi = std::chrono::high_resolution_clock::now();
-            //int maximoParcial = -1;
-            //int rta = generarSolucion(vectorcitoDeOpiniones, agentesConfiables, i-1, i, m);
-            int rta = generarSolucion(vectorcitoDeOpiniones, agentesConfiables, 9, 10, m);
-            m = 0;
-            auto tpf = std::chrono::high_resolution_clock::now();
+            std::uniform_int_distribution<int> uniform_dist_opiniones(0, i*i);
+            std::vector<Opinion> vectorcitoDeOpiniones = generarInstanciaRandom(i, i*(i-5));//= generarOtraMejorInstancia(i);
+           // std::cout << vectorcitoDeOpiniones;
 
-            auto tiempo = std::chrono::duration_cast<std::chrono::nanoseconds>(tpf-tpi).count();
-            tiempoTotal+= tiempo;
+            {
+                auto tpi = std::chrono::high_resolution_clock::now();
+                //int maximoParcial = -1;
+                //int rta = generarSolucion(vectorcitoDeOpiniones, agentesConfiables, i-1, i, m);
+                int rta = generarSolucion(vectorcitoDeOpiniones, agentesConfiables, i-1, i, m);
+                m = 0;
+                auto tpf = std::chrono::high_resolution_clock::now();
+
+                auto tiempo = std::chrono::duration_cast<std::chrono::nanoseconds>(tpf-tpi).count();
+                tiempoTotalConPodas+= tiempo;
+            }
+            {
+                auto tpi = std::chrono::high_resolution_clock::now();
+                //int maximoParcial = -1;
+                //int rta = generarSolucion(vectorcitoDeOpiniones, agentesConfiables, i-1, i, m);
+                int rta = generarSolucionSinPodas(vectorcitoDeOpiniones, agentesConfiables, i-1, i);
+                auto tpf = std::chrono::high_resolution_clock::now();
+
+                auto tiempo = std::chrono::duration_cast<std::chrono::nanoseconds>(tpf-tpi).count();
+                tiempoTotalSinPodas+= tiempo;
+            }
         }
 
-        tiempoTotal = tiempoTotal/ cantInstanciasPorN;
-        std::cout << i << "," << tiempoTotal << std::endl ;
-        a_file << i << "," << tiempoTotal << std::endl;
+        tiempoTotalConPodas = tiempoTotalConPodas/ cantInstanciasPorN;
+        tiempoTotalSinPodas = tiempoTotalSinPodas/ cantInstanciasPorN;
+        std::cout << i << "," << tiempoTotalConPodas << "," << tiempoTotalSinPodas << std::endl ;
+        a_file << i << "," << tiempoTotalConPodas << "," << tiempoTotalSinPodas << std::endl;
     }
 
     a_file.close();
