@@ -18,9 +18,6 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tpesi.dir/main.cpp.o" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tpesi.dir/main.cpp.o" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cmake-build-debug/tpesi" afterPath="$PROJECT_DIR$/cmake-build-debug/tpesi" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/esidatos.csv" afterPath="$PROJECT_DIR$/esidatos.csv" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main.cpp" afterPath="$PROJECT_DIR$/main.cpp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/notebook-esi.ipynb" afterPath="$PROJECT_DIR$/notebook-esi.ipynb" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -405,7 +402,7 @@
       <workItem from="1504405603749" duration="131000" />
       <workItem from="1504418581437" duration="399000" />
       <workItem from="1504428965920" duration="349000" />
-      <workItem from="1504447253695" duration="1044000" />
+      <workItem from="1504447253695" duration="1088000" />
     </task>
     <task id="LOCAL-00001" summary="nose">
       <created>1503864706327</created>
@@ -435,11 +432,18 @@
       <option name="project" value="LOCAL" />
       <updated>1504390111847</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="nose">
+      <created>1504452649449</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1504452649449</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="60665000" />
+    <option name="totallyTimeSpent" value="60709000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
