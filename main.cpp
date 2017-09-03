@@ -269,12 +269,8 @@ std::vector<Opinion> generarInstanciaRandom(int n, int cantOpiniones) {
 }
 
 int main() {
-<<<<<<< HEAD
 
-   std::vector<Opinion> opiniones;
-=======
     std::vector<Opinion> opiniones;
->>>>>>> b95256f87cebf0e19496fccc4f604ea7cbc7f5de
     int cantAgentes, cantOpiniones;
 
     std::cin >> cantAgentes >> cantOpiniones;
@@ -290,19 +286,11 @@ int main() {
         }
         std::set<int> confiables;
         int maximoParcial = 0;
-<<<<<<< HEAD
         int rta = generarSolucion(opiniones, confiables, cantAgentes - 1, maximoParcial);
-=======
-        int rta = generarSolucion(opiniones, confiables, cantAgentes - 1, cantAgentes, maximoParcial);
->>>>>>> b95256f87cebf0e19496fccc4f604ea7cbc7f5de
         opiniones.clear();
         std::cout << rta << std::endl;
         std::cin >> cantAgentes >> cantOpiniones;
     }
-<<<<<<< HEAD
-
-=======
-
     return m;
 }
 
@@ -366,7 +354,6 @@ int main() {
 //
 //a_file.close();
 //std::cout << "Listo!" << std::endl;
->>>>>>> b95256f87cebf0e19496fccc4f604ea7cbc7f5de
 
 
 //    std::string nombreArchivo = "esidatos";
