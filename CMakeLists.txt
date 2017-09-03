@@ -4,4 +4,4 @@ project(tpesi)
 set(CMAKE_CXX_STANDARD 11)
 
 set(SOURCE_FILES main.cpp)
-add_executable(tpesi ${SOURCE_FILES})
+add_executable(tp1 ${SOURCE_FILES})
